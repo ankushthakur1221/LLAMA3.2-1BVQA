@@ -1,0 +1,9 @@
+torch>=2.7
+transformers==4.50.3
+peft==0.15.2
+numpy
+pillow
+pyyaml
+requests
+tqdm
+matplotlib

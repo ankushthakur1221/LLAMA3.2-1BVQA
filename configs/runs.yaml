@@ -1,0 +1,12 @@
+# Named runs: each is a set of overrides on configs/default.yaml.
+reference: {}                                   # query bridge, 32 tokens, frozen LLM (also the main model)
+blind:      {bridge: {blind: true}}             # image zeroed: language-prior floor (H1)
+lora:       {llm: {lora: {enabled: true}}}      # lightly fine-tuned LLM (H3)
+tokens16:   {bridge: {tokens: 16}}              # fewer visual tokens
+mlp16:      {bridge: {type: mlp, tokens: 16}}   # pooled MLP at equal 16 tokens (H2, against tokens16)
+
+# Extra runs, only if the session is ahead of plan.
+tokens64:   {bridge: {tokens: 64}}
+mlp64:      {bridge: {type: mlp, tokens: 64}}
+seed1:      {seed: 1}
+seed2:      {seed: 2}

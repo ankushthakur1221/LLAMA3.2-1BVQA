@@ -1,0 +1,21 @@
+# CPU smoke test: a tiny open language model and a handful of images. Checks the code, not the accuracy.
+device: cpu
+paths:
+  cache: cache/smoke
+  runs: runs/smoke
+llm:
+  name: HuggingFaceTB/SmolLM2-135M-Instruct
+  template: chatml
+data:
+  train_images: 48
+  dev_images: 8
+  test_images: 40
+  preload: false
+train:
+  epochs: 1
+  batch_size: 8
+  log_every: 5
+  dev_evals: 2
+  dev_questions: 16
+eval:
+  batch_size: 16

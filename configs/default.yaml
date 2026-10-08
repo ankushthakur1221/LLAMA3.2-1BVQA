@@ -1,0 +1,57 @@
+# Frozen SigLIP 2 Large -> trainable bridge -> frozen Llama 3.2 1B.
+seed: 0
+device: auto            # auto | cuda | cpu
+
+paths:
+  data: data
+  splits: data/splits
+  cache: cache/siglip2-large
+  runs: runs
+
+vision:
+  name: google/siglip2-large-patch16-256
+  layer: -2             # second-last layer, as in BLIP-2
+  tokens: 256           # 16 x 16 patches
+  dim: 1024
+
+llm:
+  name: meta-llama/Llama-3.2-1B-Instruct
+  template: llama3      # llama3 | chatml | plain
+  lora:
+    enabled: false
+    r: 8
+    alpha: 16
+    dropout: 0.0
+    targets: [q_proj, v_proj]
+    lr: 1.0e-4
+
+bridge:
+  type: query           # query | mlp
+  tokens: 32            # visual tokens handed to the language model (mlp: must be a square)
+  width: 512
+  layers: 2
+  heads: 8
+  dropout: 0.1
+  blind: false          # true: image features replaced by zeros
+
+data:
+  train_images: 20000   # first N images of the 40,000-image training pool
+  dev_images: 2000
+  test_images: 5000
+  preload: true         # hold the feature cache in RAM
+
+train:
+  epochs: 2
+  batch_size: 128
+  lr: 2.0e-4
+  weight_decay: 0.05
+  warmup_frac: 0.05
+  grad_clip: 1.0
+  log_every: 50
+  dev_evals: 4          # dev checks spread over training, for the convergence curve
+  dev_questions: 2000
+  max_minutes: null     # stop training early when this is exceeded
+
+eval:
+  batch_size: 256
+  max_new_tokens: 8
