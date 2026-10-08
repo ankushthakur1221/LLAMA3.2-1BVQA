@@ -152,6 +152,7 @@ def fig_tradeoff(runs, out):
             for n, x, y in zip(names, xs, ys):
                 ax.annotate(f"{runs[n]['config']['bridge']['tokens']} tokens", (x, y), textcoords="offset points",
                             xytext=(6, 6), fontsize=8, color=SECONDARY)
+        ax.margins(x=0.25, y=0.2)
         ax.set_xlabel("Inference time per question (ms)", color=SECONDARY, fontsize=9)
         ax.set_ylabel(label, color=SECONDARY, fontsize=9)
     axes[0].set_title("Accuracy against inference cost", loc="left", fontsize=10, color=INK)
@@ -180,7 +181,7 @@ def fig_qualitative(runs, cfg, runs_dir, out, n=8, seed=0):
     picks = [i for i in order if is_right(i)][:n // 2] + [i for i in order if not is_right(i)][:n - n // 2]
     if not picks:
         return
-    heat = LinearSegmentedColormap.from_list("attention", [(0.92, 0.41, 0.2, 0.0), (0.92, 0.41, 0.2, 0.8)])
+    heat = LinearSegmentedColormap.from_list("attention", [(0.92, 0.41, 0.2, 0.0), (0.92, 0.41, 0.2, 0.7)])
     cols = (len(picks) + 1) // 2
     fig, axes = plt.subplots(2, cols, figsize=(3.1 * cols, 7.4), squeeze=False)
     for ax in axes.flat:
@@ -195,7 +196,7 @@ def fig_qualitative(runs, cfg, runs_dir, out, n=8, seed=0):
         if attns:
             grid = attns[-1][0].mean(0)
             side = int(grid.numel() ** 0.5)
-            grid = (grid / grid.max()).reshape(side, side).numpy()
+            grid = ((grid - grid.min()) / (grid.max() - grid.min() + 1e-8)).reshape(side, side).numpy()
             ax.imshow(grid, cmap=heat, extent=(0, image.width, image.height, 0), interpolation="bilinear", vmin=0, vmax=1)
         lines = [r["q"], f"human: {r['mc']}   model: {pred[r['qid']]}"]
         if blind:

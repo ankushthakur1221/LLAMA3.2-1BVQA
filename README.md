@@ -24,7 +24,8 @@ image -> SigLIP 2 Large (frozen, features cached) -> bridge (trained) -> Llama 3
 | `vqa/data.py` | Split files, feature cache, batching |
 | `scripts/` | Command-line steps, listed below |
 | `data/`, `cache/`, `runs/` | Downloads, cached features, results (created by the scripts) |
-| `docs/` | Proposal and course documents |
+| `docs/proposal.md` | The project proposal, current with this code |
+| `tests/` | Checks for the accuracy function |
 
 ## Setup
 
